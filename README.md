@@ -10,6 +10,8 @@ Authors:
 
 Visitor saves info about visitor of web page into db and uses cookie to identify same visitor. Lifetime of that cookie is configurable - default is 10 years. It is using [UtmCookie](https://github.com/xsuchy09/utm-cookie) to save UTMs too and [Hashids](https://github.com/ivanakimov/hashids.php) to get unique hash for every single visitor (for example in JavaScript it is not safe to use directly ID from DB).
 
+SQL to create DB table is included (visitor.sql - for PostgreSQL). Column "visits_count" is counted with trigger (new visit is counted if it is more than 24 hours from last visit).
+
 ## Installation (via composer)
 
 [Get composer](http://getcomposer.org/doc/00-intro.md) and add this in your requires section of the composer.json:

@@ -223,9 +223,8 @@ class Visitor
 		
 		$sqlUpdate = '
 			UPDATE 
-				' . $this->dbTableName . '
+				' . $this->dbTableName . ' 
 			SET 
-				visits_count = visits_count + 1, 
 				last_visit = NOW() 
 			WHERE 
 				visitor_id = :visitor_id
@@ -258,7 +257,7 @@ class Visitor
 	{
 		$sql = '
 			INSERT INTO 
-				' . $this->dbTableName . '(
+				' . $this->dbTableName . ' (
 					ip_address, 
 					hostname, 
 					request_uri, 
@@ -280,7 +279,7 @@ class Visitor
 					:http_referer, 
 					:remote_port, 
 					:user_agent, 
-					0, 
+					1, 
 					NOW(), 
 					NOW(), 
 					:utm_source, 
@@ -308,7 +307,7 @@ class Visitor
 			
 			$sqlUpdate = '
 				UPDATE 
-					' . $this->dbTableName . '
+					' . $this->dbTableName . ' 
 				SET 
 					hashids = :hashids 
 				WHERE 
@@ -339,7 +338,7 @@ class Visitor
 			SELECT 
 				* 
 			FROM 
-				' . $this->dbTableName . '
+				' . $this->dbTableName . ' 
 			WHERE 
 				visitor_id = :visitor_id
 				';
