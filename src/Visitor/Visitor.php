@@ -188,7 +188,7 @@ class Visitor
 				visitor_id, 
 				hashids 
 			FROM 
-				' . $this->pdo->quote($this->dbTableName) . ' 
+				' . $this->dbTableName . ' 
 			WHERE 
 					visitor_id = :visitor_id 
 				AND 
@@ -223,7 +223,7 @@ class Visitor
 		
 		$sqlUpdate = '
 			UPDATE 
-				' . $this->pdo->quote($this->dbTableName) . ' 
+				' . $this->dbTableName . '
 			SET 
 				visits_count = visits_count + 1, 
 				last_visit = NOW() 
@@ -258,7 +258,7 @@ class Visitor
 	{
 		$sql = '
 			INSERT INTO 
-				' . $this->pdo->quote($this->dbTableName) . ' (
+				' . $this->dbTableName . '(
 					ip_address, 
 					hostname, 
 					request_uri, 
@@ -308,7 +308,7 @@ class Visitor
 			
 			$sqlUpdate = '
 				UPDATE 
-					' . $this->pdo->quote($this->dbTableName) . ' 
+					' . $this->dbTableName . '
 				SET 
 					hashids = :hashids 
 				WHERE 
@@ -339,7 +339,7 @@ class Visitor
 			SELECT 
 				* 
 			FROM 
-				' . $this->pdo->quote($this->dbTableName) . ' 
+				' . $this->dbTableName . '
 			WHERE 
 				visitor_id = :visitor_id
 				';
