@@ -1,0 +1,25 @@
+{
+    "name": "xsuchy09/visitor",
+    "description": "Visitor saves info about visitors of web page into DB and using cookies to identify them.",
+    "version": "1.0.0",
+    "type": "library",
+    "keywords": ["visitor", "analytics"],
+    "homepage": "https://github.com/xsuchy09/visitor",
+    "require": {
+        "php": ">=7.1",
+        "xsuchy09/utm-cookie": "^2.0",
+        "hashids/hashids": "^4.0"
+    },
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Ing. Petr Suchy",
+            "email": "suchy@wamos.cz",
+            "homepage": "http://www.wamos.cz/",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Visitor": "src/" }
+    }
+}
