@@ -12,6 +12,7 @@ namespace Visitor;
 
 use DateInterval;
 use DateTime;
+use Exception;
 use Hashids\Hashids;
 use PDO;
 use stdClass;
@@ -85,7 +86,7 @@ class Visitor
 	 * @param string|null       $cookieName
 	 * @param DateInterval|null $cookieValidityInterval
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function __construct(PDO $pdo,
 	                            string $hashidsKey,
@@ -120,7 +121,7 @@ class Visitor
 	 * Get cookie value (hashids of visitor).
 	 *
 	 * @return string|null
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	protected function getCookie(): ?string
 	{
@@ -136,7 +137,7 @@ class Visitor
 	 * Set cookie of visitor.
 	 *
 	 * @return bool
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	protected function setCookie(): bool
 	{
@@ -151,7 +152,7 @@ class Visitor
 	 * @param string|null $cookie
 	 *
 	 * @return int|null
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function getVisitorId(?string $cookie = null): ?int
 	{
@@ -167,6 +168,17 @@ class Visitor
 			$this->setCookie();
 		}
 		return $this->visitorId;
+	}
+
+	/**
+	 * Get visitor hashids. Just an alias to Visitor::getCookie.
+	 *
+	 * @return string|null
+	 * @throws Exception
+	 */
+	public function getVisitorHashids(): ?string
+	{
+		return $this->getCookie();
 	}
 	
 	/**
@@ -213,7 +225,7 @@ class Visitor
 	 * Add visit to visitor.
 	 *
 	 * @return bool
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function addVisit(): bool
 	{
@@ -327,7 +339,7 @@ class Visitor
 	 * Get data about visitor.
 	 *
 	 * @return stdClass|null
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function getVisitorData(): ?stdClass
 	{
@@ -355,7 +367,7 @@ class Visitor
 	 * Get date (with time) of first visit of visitor.
 	 *
 	 * @return DateTime
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function getVisitorFirstVisitDate(): DateTime
 	{
