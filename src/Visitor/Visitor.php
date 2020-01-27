@@ -10,6 +10,7 @@
 
 namespace Visitor;
 
+
 use DateInterval;
 use DateTime;
 use Exception;
@@ -17,6 +18,7 @@ use Hashids\Hashids;
 use PDO;
 use stdClass;
 use UtmCookie\UtmCookie;
+
 
 /**
  * Description of Visitor
