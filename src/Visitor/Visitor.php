@@ -197,15 +197,27 @@ class Visitor
 	{
 		$expire = new DateTime();
 		$expire->add($this->cookieValidityInterval);
-		return setcookie(
-			$this->cookieName,
-			$this->visitorHashids,
-			$expire->getTimestamp(),
-			$this->cookiePath . ($this->cookieSameSite !== null ? sprintf('; SameSite=%s', $this->cookieSameSite) : ''),
-			$this->cookieDomain,
-			$this->cookieSecure,
-			$this->cookieHttpOnly
-		);
+		$options = [
+			'expires' => $expire->getTimestamp(),
+			'path' => $this->cookiePath,
+			'domain' => $this->cookieDomain,
+			'secure' => $this->cookieSecure,
+			'httponly' => $this->cookieHttpOnly,
+			'samesite' => (string)$this->cookieSameSite,
+		];
+		if (PHP_VERSION_ID >= 70300) {
+			return setcookie($this->cookieName, $this->visitorHashids, $options);
+		} else {
+			return setcookie(
+				$this->cookieName,
+				$this->visitorHashids,
+				$options['expires'],
+				$options['path'] . ($this->cookieSameSite ? sprintf('; SameSite=%s', $this->cookieSameSite) : ''),
+				$options['domain'],
+				$options['secure'],
+				$options['httponly']
+			);
+		}
 	}
 	
 	/**
