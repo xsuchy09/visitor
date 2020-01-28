@@ -1,14 +1,15 @@
 {
     "name": "xsuchy09/visitor",
     "description": "Visitor saves info about visitors of web page into DB and using cookies to identify them.",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "type": "library",
     "keywords": ["visitor", "analytics"],
     "homepage": "https://github.com/xsuchy09/visitor",
     "require": {
         "php": ">=7.1",
         "xsuchy09/utm-cookie": "^2.0",
-        "hashids/hashids": "^4.0"
+        "hashids/hashids": "^4.0",
+        "ext-pdo": "*"
     },
     "license": "Apache-2.0",
     "authors": [

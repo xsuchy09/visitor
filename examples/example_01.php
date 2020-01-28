@@ -14,7 +14,7 @@ use Visitor\Visitor;
 $pdo = $PDO = new PDO(sprintf('pgsql:host=%s;port=%d;dbname=%s;user=%s;password=%s', 'host', 5432, 'dbname', 'user', 'password'));
 
 // just init (read utm params and cookie and save new values)
-$visitor = new Visitor($pdo, 'HashidsKey', 8, 'data.visitor', 'my_visitor', new DateInterval('P1Y'));
+$visitor = new Visitor($pdo, 'HashidsKey', 8, 'data.visitor', 'my_visitor', new DateInterval('P1Y'), '/', '', true, true);
 $visitor->addVisit(); // add visit
 
 $firstVisitDate = $visitor->getVisitorFirstVisitDate(); // get DateTime of first visit of user

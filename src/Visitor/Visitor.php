@@ -28,10 +28,14 @@ use UtmCookie\UtmCookie;
 class Visitor
 {
 
-	const DB_TABLE_NAME = 'visitor';
-	const COOKIE_NAME = 'visitor';
-	const COOKIE_VALIDITY = 'P10Y';
-	const HASHIDS_MIN_LENGTH = 16;
+	public const DB_TABLE_NAME = 'visitor';
+	public const COOKIE_NAME = 'visitor';
+	public const COOKIE_VALIDITY = 'P10Y';
+	public const COOKIE_PATH = '/';
+	public const COOKIE_DOMAIN = '';
+	public const COOKIE_SECURE = false;
+	public const COOKIE_HTTPONLY = false;
+	public const HASHIDS_MIN_LENGTH = 16;
 
 	/**
 	 * @var string
@@ -39,9 +43,29 @@ class Visitor
 	private $cookieName = self::COOKIE_NAME;
 
 	/**
-	 * @var ?DateInterval
+	 * @var DateInterval|null
 	 */
 	private $cookieValidityInterval = null;
+
+	/**
+	 * @var
+	 */
+	private $cookiePath = self::COOKIE_PATH;
+
+	/**
+	 * @var string
+	 */
+	private $cookieDomain = self::COOKIE_DOMAIN;
+
+	/**
+	 * @var bool
+	 */
+	private $cookieSecure = self::COOKIE_SECURE;
+
+	/**
+	 * @var bool
+	 */
+	private $cookieHttpOnly = self::COOKIE_HTTPONLY;
 
 	/**
 	 * @var string
@@ -49,7 +73,7 @@ class Visitor
 	private $dbTableName = self::DB_TABLE_NAME;
 
 	/**
-	 * @var ?string
+	 * @var string|null
 	 */
 	private $hashidsKey = null;
 
@@ -87,6 +111,10 @@ class Visitor
 	 * @param string|null       $dbTableName
 	 * @param string|null       $cookieName
 	 * @param DateInterval|null $cookieValidityInterval
+	 * @param string|null       $cookiePath
+	 * @param string|null       $cookieDomain
+	 * @param bool|null         $cookieSecure
+	 * @param bool|null         $cookieHttpOnly
 	 *
 	 * @throws Exception
 	 */
@@ -95,7 +123,11 @@ class Visitor
 	                            ?int $hashidsMinLength = null,
 	                            ?string $dbTableName = null,
 	                            ?string $cookieName = null,
-	                            ?DateInterval $cookieValidityInterval = null)
+	                            ?DateInterval $cookieValidityInterval = null,
+	                            ?string $cookiePath = null,
+	                            ?string $cookieDomain = null,
+	                            ?bool $cookieSecure = null,
+	                            ?bool $cookieHttpOnly = null)
 	{
 		// required params
 		$this->pdo = $pdo;
@@ -113,6 +145,18 @@ class Visitor
 		$this->cookieValidityInterval = $cookieValidityInterval;
 		if ($this->cookieValidityInterval === null) {
 			$this->cookieValidityInterval = new DateInterval(self::COOKIE_VALIDITY);
+		}
+		if ($cookiePath !== null) {
+			$this->cookiePath = $cookiePath;
+		}
+		if ($cookieDomain !== null) {
+			$this->cookieDomain = $cookieDomain;
+		}
+		if ($cookieSecure !== null) {
+			$this->cookieSecure = $cookieSecure;
+		}
+		if ($cookieHttpOnly !== null) {
+			$this->cookieHttpOnly = $cookieHttpOnly;
 		}
 
 		// init
@@ -145,7 +189,7 @@ class Visitor
 	{
 		$expire = new DateTime();
 		$expire->add($this->cookieValidityInterval);
-		return setcookie($this->cookieName, $this->visitorHashids, $expire->getTimestamp(), '/');
+		return setcookie($this->cookieName, $this->visitorHashids, $expire->getTimestamp(), $this->cookiePath, $this->cookieDomain, $this->cookieSecure, $this->cookieHttpOnly);
 	}
 	
 	/**
@@ -159,7 +203,7 @@ class Visitor
 	public function getVisitorId(?string $cookie = null): ?int
 	{
 		// cli or bot ... don't add visit ...
-		if (php_sapi_name() === 'cli' || $this->botDetected() === true) {
+		if (PHP_SAPI === 'cli' || $this->botDetected() === true) {
 			return null; // cron, bot ...
 		}
 		if ($cookie === null) {
@@ -218,9 +262,9 @@ class Visitor
 			$this->visitorHashids = $visitor->hashids;
 			
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 	
 	/**
@@ -359,8 +403,7 @@ class Visitor
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->bindValue(':visitor_id', $this->getVisitorId());
 		if ($stmt->execute() === true) {
-			$data = $stmt->fetchObject();
-			return $data;
+			return $stmt->fetchObject();
 		}
 		return null;
 	}
@@ -378,5 +421,53 @@ class Visitor
 			return new DateTime();
 		}
 		return new DateTime($data->created);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCookieName(): string
+	{
+		return $this->cookieName;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getCookieValidityInterval()
+	{
+		return $this->cookieValidityInterval;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getCookiePath()
+	{
+		return $this->cookiePath;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCookieDomain(): string
+	{
+		return $this->cookieDomain;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isCookieSecure(): bool
+	{
+		return $this->cookieSecure;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isCookieHttpOnly(): bool
+	{
+		return $this->cookieHttpOnly;
 	}
 }
