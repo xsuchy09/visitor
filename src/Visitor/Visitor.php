@@ -35,6 +35,7 @@ class Visitor
 	public const COOKIE_DOMAIN = '';
 	public const COOKIE_SECURE = false;
 	public const COOKIE_HTTPONLY = false;
+	public const COOKIE_SAMESITE = null;
 	public const HASHIDS_MIN_LENGTH = 16;
 
 	/**
@@ -66,6 +67,11 @@ class Visitor
 	 * @var bool
 	 */
 	private $cookieHttpOnly = self::COOKIE_HTTPONLY;
+
+	/**
+	 * @var string|null
+	 */
+	private $cookieSameSite = self::COOKIE_SAMESITE;
 
 	/**
 	 * @var string
@@ -127,7 +133,8 @@ class Visitor
 	                            ?string $cookiePath = null,
 	                            ?string $cookieDomain = null,
 	                            ?bool $cookieSecure = null,
-	                            ?bool $cookieHttpOnly = null)
+	                            ?bool $cookieHttpOnly = null,
+								?string $cookieSameSite = null)
 	{
 		// required params
 		$this->pdo = $pdo;
@@ -158,6 +165,7 @@ class Visitor
 		if ($cookieHttpOnly !== null) {
 			$this->cookieHttpOnly = $cookieHttpOnly;
 		}
+		$this->cookieSameSite = $cookieSameSite;
 
 		// init
 		$this->hashids = new Hashids($this->hashidsKey, $this->hashidsMinLength);
@@ -189,7 +197,15 @@ class Visitor
 	{
 		$expire = new DateTime();
 		$expire->add($this->cookieValidityInterval);
-		return setcookie($this->cookieName, $this->visitorHashids, $expire->getTimestamp(), $this->cookiePath, $this->cookieDomain, $this->cookieSecure, $this->cookieHttpOnly);
+		return setcookie(
+			$this->cookieName,
+			$this->visitorHashids,
+			$expire->getTimestamp(),
+			$this->cookiePath . ($this->cookieSameSite !== null ? sprintf('; SameSite=%s', $this->cookieSameSite) : ''),
+			$this->cookieDomain,
+			$this->cookieSecure,
+			$this->cookieHttpOnly
+		);
 	}
 	
 	/**
@@ -469,5 +485,13 @@ class Visitor
 	public function isCookieHttpOnly(): bool
 	{
 		return $this->cookieHttpOnly;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getCookieSameSite(): ?string
+	{
+		return $this->cookieSameSite;
 	}
 }

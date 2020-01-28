@@ -40,4 +40,4 @@ $visitor = new Visitor($pdo, 'HashidsKey'); // it needs pdo instance in construc
 $visitor->addVisit(); // set last visit of of visitor if he is identified or just create the new one with first visit
 ```
 
-More examples can be found in the examples/ directory. Since version 1.0.4 you can set cookie params in constructor (path, domain, secure, httpOnly) and some getters were added.
+More examples can be found in the examples/ directory. Since version 1.0.4 you can set cookie params in constructor (path, domain, secure, httpOnly, sameSite) and some getters were added.
