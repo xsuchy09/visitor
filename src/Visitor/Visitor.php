@@ -33,7 +33,7 @@ class Visitor
 	public const COOKIE_VALIDITY = 'P10Y';
 	public const COOKIE_PATH = '/';
 	public const COOKIE_DOMAIN = '';
-	public const COOKIE_SECURE = false;
+	//public const COOKIE_SECURE = false;
 	public const COOKIE_HTTPONLY = false;
 	public const COOKIE_SAMESITE = null;
 	public const HASHIDS_MIN_LENGTH = 16;
@@ -61,7 +61,7 @@ class Visitor
 	/**
 	 * @var bool
 	 */
-	private $cookieSecure = self::COOKIE_SECURE;
+	private $cookieSecure = null;//self::COOKIE_SECURE;
 
 	/**
 	 * @var bool
@@ -161,6 +161,13 @@ class Visitor
 		}
 		if ($cookieSecure !== null) {
 			$this->cookieSecure = $cookieSecure;
+		} else {
+			$secureConnection = false;
+			$https = filter_input(INPUT_SERVER, 'HTTPS');
+			if ((empty($https) === false && strtolower($https) !== 'off') || (int)filter_input(INPUT_SERVER, 'SERVER_PORT') === 443) {
+				$secureConnection = true;
+			}
+			$this->cookieSecure = $secureConnection;
 		}
 		if ($cookieHttpOnly !== null) {
 			$this->cookieHttpOnly = $cookieHttpOnly;
